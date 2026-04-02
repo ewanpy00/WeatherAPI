@@ -18,7 +18,7 @@ def _get_friendly_error(status_code: int, payload: object) -> str:
     if status_code == 404:
         return "Город не найден. Проверьте написание (и страну при необходимости)."
     if status_code == 401:
-        return "Неавторизовано: проверьте API-ключ (OPENWEATHER_API_KEY) в .env."
+        return "Неавторизовано: проверьте API-ключ (API_KEY) в .env."
     if status_code == 429:
         return "Слишком много запросов к API. Попробуйте позже."
     if 500 <= status_code:
@@ -82,15 +82,18 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    city_name = " ".join(args.city)
+
     try:
-        temp_c, description = fetch_weather(" ".join(args.city))
+        temp_c, description = fetch_weather(city_name)
+
+        output = f"Погода в городе {city_name}: {temp_c:.1f} C"
         if description:
-            print(f"Погода в городе {args.city}: ", end=" ")
-            print(f"{temp_c:.1f} C - {description}")
-        else:
-            print(f"Погода в городе {args.city}: ", end=" ")
-            print(f"{temp_c:.1f} C")
+            output += f" - {description}"
+
+        print(output)
         return 0
+
     except RuntimeError as e:
         print(f"Ошибка: {e}")
         return 1
