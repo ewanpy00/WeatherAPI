@@ -81,7 +81,6 @@ def main() -> int:
         help="Название города (например, 'Moscow' или 'New York', можно в кавычках).",
     )
     args = parser.parse_args()
-
     city_name = " ".join(args.city)
 
     try:
